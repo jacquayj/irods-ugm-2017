@@ -89,6 +89,13 @@ endforeach()
 
 install(
   FILES
-  ${CMAKE_SOURCE_DIR}/process_album_directories.re
+  ${CMAKE_SOURCE_DIR}/extract_image_metadata.re
   DESTINATION /etc/irods
   )
+
+install(
+  FILES
+  ${CMAKE_SOURCE_DIR}/iRODS-UGM-Demo.json
+  DESTINATION /etc/irods
+  )
+

@@ -20,18 +20,21 @@ import (
 */
 import "C"
 
+const API_AUTH_FILE = "/etc/irods/iRODS-UGM-Demo.json"
+
 //export ExtractImageMetadata
-func ExtractImageMetadata(imagePath *C.msParam_t, APIAuthPath *C.msParam_t, rei *C.ruleExecInfo_t) int {
+func ExtractImageMetadata(imagePath *C.msParam_t, rei *C.ruleExecInfo_t) int {
+
+	// Filter for images here
 
 	// Setup GoRODS/msi
 	msi.Configure(unsafe.Pointer(rei))
 
 	// Convert input to Golang strings
 	imageFilePath := msi.ToParam(unsafe.Pointer(imagePath)).String()
-	apiAuthFile := msi.ToParam(unsafe.Pointer(APIAuthPath)).String()
 
 	// Extract image metadata via machine learning API
-	kvp := GetImageLabels(imageFilePath, apiAuthFile).ToKVP()
+	kvp := GetImageLabels(imageFilePath, API_AUTH_FILE).ToKVP()
 
 	// Associate metadata to data object
 	if err := msi.Call("msiAssociateKeyValuePairsToObj", kvp, imageFilePath, "-d"); err != nil {
