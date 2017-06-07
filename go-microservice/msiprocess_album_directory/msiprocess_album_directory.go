@@ -21,10 +21,10 @@ import "C"
 func ProcessAlbumDirectory(imagePath *C.msParam_t, APIAuthPath *C.msParam_t, rei *C.ruleExecInfo_t) int {
 	msi.Configure(unsafe.Pointer(rei))
 
-	imageFilePath := msi.ToParam(unsafe.Pointer(imagePath))
-	apiAuthFile := msi.ToParam(unsafe.Pointer(APIAuthPath))
+	imageFilePath := msi.ToParam(unsafe.Pointer(imagePath)).String()
+	apiAuthFile := msi.ToParam(unsafe.Pointer(APIAuthPath)).String()
 
-	GetImageLabels(imageFilePath.String(), apiAuthFile.String())
+	GetImageLabels(imageFilePath, apiAuthFile)
 
 	return 0
 }
