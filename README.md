@@ -24,10 +24,34 @@ $ cmake .. && make
 $ make install
 ```
 
-## Usage
-
-Working directory: `irods-ugm-2017/go-microservice/build`
-
+4. Configure iRODS with rule set
+```
+$ sudo vi /etc/irods/server_config.json 
 ```
 
+Add `extract_image_metadata` to `re_rulebase_set` JSON array:
+```
+"re_rulebase_set": [
+    "core", "extract_image_metadata"
+],
+```
+
+5. Restart iRODS
+```
+$ sudo service irods restart
+```
+
+## Usage
+
+```
+$ iput gopher.jpg
+$ imeta ls -d gopher.jpg
+AVUs defined for dataObj gopher.jpg:
+attribute: tags_english
+value: nature,mammal,vertebrate,wildlife,fauna,grass,whiskers,domestic rabbit,prairie dog,squirrel
+units: 
+----
+attribute: tags_dutch
+value: natuur,zoogdier,gewerveld,dieren in het wild,fauna,gras,bakkebaarden,Huiselijk konijn,prairiehond,eekhoorn
+units: 
 ```
