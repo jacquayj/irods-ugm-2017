@@ -40,13 +40,18 @@ acPostProcForPut {
 
 ```
 $ iput gopher.jpg
+```
+
+![Gopher Picture](/gopher.jpg?raw=true "Gophers are cool")
+
+```
 $ imeta ls -d gopher.jpg
 AVUs defined for dataObj gopher.jpg:
 attribute: tags_english
-value: nature,mammal,vertebrate,wildlife,fauna,grass,whiskers,domestic rabbit,prairie dog,squirrel
+value: mammal,vertebrate,squirrel,wildlife,fauna,whiskers,prairie dog,marmot,rodent,fox squirrel
 units: 
 ----
 attribute: tags_dutch
-value: natuur,zoogdier,gewerveld,dieren in het wild,fauna,gras,bakkebaarden,Huiselijk konijn,prairiehond,eekhoorn
+value: zoogdier,gewerveld,eekhoorn,dieren in het wild,fauna,bakkebaarden,prairiehond,marmot,knaagdier,Vos eekhoorn
 units: 
 ```
