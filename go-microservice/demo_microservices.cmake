@@ -1,7 +1,7 @@
 
 set(
   GOMICROSERVICES
-  msiprocess_album_directory
+  msiextract_image_metadata
   )
 
 set(
@@ -23,6 +23,7 @@ set(ENV{GOPATH} ${CMAKE_SOURCE_DIR})
 set(ENV{CXX} "/opt/irods-externals/clang3.8-0/bin/clang++")
 set(ENV{CC} "/opt/irods-externals/clang3.8-0/bin/clang")
 
+# Install golang dependencies
 execute_process(COMMAND go get github.com/jjacquay712/GoRODS
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
@@ -31,6 +32,14 @@ execute_process(COMMAND go get golang.org/x/net/context
 
 execute_process(COMMAND go get cloud.google.com/go/vision/apiv1
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+execute_process(COMMAND go get golang.org/x/text/language
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+execute_process(COMMAND go get cloud.google.com/go/translate
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+
 
 foreach(GOMICROSERVICE ${GOMICROSERVICES})
 
