@@ -16,7 +16,13 @@ $ yum install irods-externals* irods-runtime irods-devel
 git clone https://github.com/jjacquay712/irods-ugm-2017.git
 ```
 
-3. **Build and install**
+3. **Setup $PATH**
+```
+export PATH=$PATH:/opt/irods-externals/cmake3.5.2-0/bin
+export PATH=$PATH:/opt/irods-externals/clang3.8-0/bin
+```
+
+4. **Build and install**
 ```
 $ cd irods-ugm-2017/go-microservice
 $ mkdir build && cd build
@@ -24,7 +30,7 @@ $ cmake .. && make
 $ make install
 ```
 
-4. **Configure iRODS `core.re`**
+5. **Configure iRODS `core.re`**
 ```
 $ sudo vi /etc/irods/core.re
 ```
@@ -35,6 +41,8 @@ acPostProcForPut {
 	msiextract_image_metadata($objPath);
 }
 ```
+
+6. You're all set!
 
 ## Usage
 
