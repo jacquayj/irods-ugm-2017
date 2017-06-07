@@ -38,6 +38,7 @@ acPostProcForPut {
 
 ## Usage
 
+From root `irods-ugm-2017/` repo directory:
 ```
 $ iput gopher.jpg
 ```
