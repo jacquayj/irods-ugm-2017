@@ -25,12 +25,11 @@ $ make install
 ```
 
 4. Configure iRODS `core.re`
-
 ```
 $ sudo vi /etc/irods/core.re
 ```
 
-Add to `core.re` file
+Add the following contents to `core.re` file:
 ```
 acPostProcForPut {
 	msiextract_image_metadata($objPath);
