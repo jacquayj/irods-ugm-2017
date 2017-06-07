@@ -56,3 +56,9 @@ attribute: tags_dutch
 value: zoogdier,gewerveld,eekhoorn,dieren in het wild,fauna,bakkebaarden,prairiehond,marmot,knaagdier,Vos eekhoorn
 units: 
 ```
+
+## Developer Resources
+
+* [msiextract_image_metadata Microservice Source Code](/go-microservice/msiextract_image_metadata/msiextract_image_metadata.go)
+* [GoRODS/msi Package Documentation](https://godoc.org/github.com/jjacquay712/GoRODS/msi)
+
