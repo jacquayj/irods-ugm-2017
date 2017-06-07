@@ -22,40 +22,19 @@ import "C"
 
 //export ExtractImageMetadata
 func ExtractImageMetadata(imagePath *C.msParam_t, APIAuthPath *C.msParam_t, rei *C.ruleExecInfo_t) int {
+
+	// Setup GoRODS/msi
 	msi.Configure(unsafe.Pointer(rei))
 
 	// Convert input to Golang strings
 	imageFilePath := msi.ToParam(unsafe.Pointer(imagePath)).String()
 	apiAuthFile := msi.ToParam(unsafe.Pointer(APIAuthPath)).String()
 
-	// Extract image labels via machine learning API
-	enLabels := GetImageLabels(imageFilePath, apiAuthFile)
+	// Extract image metadata via machine learning API
+	kvp := GetImageLabels(imageFilePath, apiAuthFile).ToKVP()
 
-	// Translate the labels into dutch
-	labels := make(ImgLabels, len(enLabels))
-	for i, label := range enLabels {
-		labels[i].english = label
-	}
-
-	labels.FetchTranslations(apiAuthFile)
-
-	metaKVPs := msi.NewParam(msi.KeyValPair_MS_T)
-
-	metaMap := make(map[string]string)
-	metaMap["tags_english"] = ""
-	metaMap["tags_dutch"] = ""
-
-	for _, label := range labels {
-		metaMap["tags_english"] += label.english + ","
-		metaMap["tags_dutch"] += label.dutch + ","
-	}
-
-	metaMap["tags_english"] = strings.TrimRight(metaMap["tags_english"], ",")
-	metaMap["tags_dutch"] = strings.TrimRight(metaMap["tags_dutch"], ",")
-
-	metaKVPs.SetKVP(metaMap)
-
-	if err := msi.Call("msiAssociateKeyValuePairsToObj", metaKVPs, imageFilePath, "-d"); err != nil {
+	// Associate metadata to data object
+	if err := msi.Call("msiAssociateKeyValuePairsToObj", kvp, imageFilePath, "-d"); err != nil {
 		log.Print(err)
 		return -1
 	}
@@ -82,16 +61,48 @@ func (labels ImgLabels) FetchTranslations(apiAuthFile string) {
 	}
 }
 
-func GetImageLabels(filepath, apiAuthFile string) (imageLabels []string) {
+func (labels ImgLabels) ToKVP() *msi.Param {
+	metaKVPs := msi.NewParam(msi.KeyValPair_MS_T)
+
+	metaMap := make(map[string]string)
+	metaMap["tags_english"] = ""
+	metaMap["tags_dutch"] = ""
+
+	for _, label := range labels {
+		metaMap["tags_english"] += label.english + ","
+		metaMap["tags_dutch"] += label.dutch + ","
+	}
+
+	metaMap["tags_english"] = strings.TrimRight(metaMap["tags_english"], ",")
+	metaMap["tags_dutch"] = strings.TrimRight(metaMap["tags_dutch"], ",")
+
+	return metaKVPs.SetKVP(metaMap)
+}
+
+func (labels ImgLabels) SetEnglish(enLabels []string) {
+	for i, label := range enLabels {
+		labels[i].english = label
+	}
+}
+
+var translateClient *translate.Client
+var visionClient *vision.ImageAnnotatorClient
+
+func GetImageLabels(filepath, apiAuthFile string) (imageLabels ImgLabels) {
 
 	authOption := option.WithServiceAccountFile(apiAuthFile)
 
 	ctx := context.Background()
 
-	// Creates a client.
-	client, err := vision.NewImageAnnotatorClient(ctx, authOption)
-	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
+	// Lazy load single client
+	if visionClient == nil {
+
+		// Creates a client.
+		client, err := vision.NewImageAnnotatorClient(ctx, authOption)
+		if err != nil {
+			log.Fatalf("Failed to create client: %v", err)
+		}
+		visionClient = client
 	}
 
 	file, err := msi.NewObjReader(filepath)
@@ -105,19 +116,25 @@ func GetImageLabels(filepath, apiAuthFile string) (imageLabels []string) {
 		log.Fatalf("Failed to create image: %v", err)
 	}
 
-	labels, err := client.DetectLabels(ctx, image, nil, 10)
+	labels, err := visionClient.DetectLabels(ctx, image, nil, 10)
 	if err != nil {
 		log.Fatalf("Failed to detect labels: %v", err)
 	}
 
-	for _, label := range labels {
-		imageLabels = append(imageLabels, label.Description)
+	enLabels := make([]string, len(labels))
+	for i, label := range labels {
+		enLabels[i] = label.Description
 	}
+
+	imageLabels = make(ImgLabels, len(labels))
+
+	imageLabels.SetEnglish(enLabels)
+
+	// Translate the labels into dutch
+	imageLabels.FetchTranslations(apiAuthFile)
 
 	return
 }
-
-var translateClient *translate.Client
 
 func TranslateString(targetLang string, words []string, apiAuthFile string) []string {
 
