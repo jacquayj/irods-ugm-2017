@@ -24,21 +24,17 @@ $ cmake .. && make
 $ make install
 ```
 
-4. Configure iRODS with rule set
+4. Configure iRODS `core.re`
+
 ```
-$ sudo vi /etc/irods/server_config.json 
+$ sudo vi /etc/irods/core.re
 ```
 
-Add `extract_image_metadata` to `re_rulebase_set` JSON array:
+Add to `core.re` file
 ```
-"re_rulebase_set": [
-    "core", "extract_image_metadata"
-],
-```
-
-5. Restart iRODS
-```
-$ sudo service irods restart
+acPostProcForPut {
+	msiextract_image_metadata($objPath);
+}
 ```
 
 ## Usage

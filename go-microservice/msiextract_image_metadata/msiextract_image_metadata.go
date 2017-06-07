@@ -39,6 +39,8 @@ func ExtractImageMetadata(imagePath *C.msParam_t, rei *C.ruleExecInfo_t) int {
 		return 0
 	}
 
+	log.Printf("msiextract_image_metadata: Extracting metadata for %v", imageFilePath)
+
 	// Extract image metadata via machine learning API
 	kvp := GetImageLabels(imageFilePath, API_AUTH_FILE).ToKVP()
 

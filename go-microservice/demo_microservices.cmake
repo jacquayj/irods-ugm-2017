@@ -87,11 +87,6 @@ foreach(GOMICROSERVICE ${GOMICROSERVICES})
 
 endforeach()
 
-install(
-  FILES
-  ${CMAKE_SOURCE_DIR}/extract_image_metadata.re
-  DESTINATION /etc/irods
-  )
 
 install(
   FILES
