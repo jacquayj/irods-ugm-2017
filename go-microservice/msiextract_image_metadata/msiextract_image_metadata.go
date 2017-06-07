@@ -8,6 +8,7 @@ import (
 	"golang.org/x/text/language"
 	"google.golang.org/api/option"
 	"log"
+	"path/filepath"
 	"strings"
 	"unsafe"
 )
@@ -25,13 +26,18 @@ const API_AUTH_FILE = "/etc/irods/iRODS-UGM-Demo.json"
 //export ExtractImageMetadata
 func ExtractImageMetadata(imagePath *C.msParam_t, rei *C.ruleExecInfo_t) int {
 
-	// Filter for images here
+	// Convert input to Golang strings
+	imageFilePath := msi.ToParam(unsafe.Pointer(imagePath)).String()
 
 	// Setup GoRODS/msi
 	msi.Configure(unsafe.Pointer(rei))
 
-	// Convert input to Golang strings
-	imageFilePath := msi.ToParam(unsafe.Pointer(imagePath)).String()
+	// Filter out non-images
+	validExtensions := []string{".jpg", ".png", ".gif"}
+	ext := strings.ToLower(filepath.Ext(imageFilePath))
+	if !Contains(validExtensions, ext) {
+		return 0
+	}
 
 	// Extract image metadata via machine learning API
 	kvp := GetImageLabels(imageFilePath, API_AUTH_FILE).ToKVP()
@@ -174,6 +180,15 @@ func TranslateString(targetLang string, words []string, apiAuthFile string) []st
 	}
 
 	return responseTranslations
+}
+
+func Contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
 }
 
 func main() {
