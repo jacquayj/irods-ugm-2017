@@ -110,6 +110,7 @@ ok  	command-line-arguments	0.023s
 ## Developer Resources
 
 * [msibasic_example Microservice Source Code](/go-microservice/msibasic_example/msibasic_example.go)
+* [msibasic_example Microservice Testing Code](/go-microservice/msibasic_example/msibasic_example_test.go)
 * [msiextract_image_metadata Microservice Source Code](/go-microservice/msiextract_image_metadata/msiextract_image_metadata.go)
 * [GoRODS/msi Package Documentation](https://godoc.org/github.com/jjacquay712/GoRODS/msi)
 
