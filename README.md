@@ -2,7 +2,9 @@
 
 This repository contains resources for John Jacquay's iRODS UGM 2017 talk/demo. The following instructions are for building and testing the Golang microservice demo.
 
-## Build / Install
+Two microservices are included: `msiextract_image_metadata` and `msibasic_example`. 
+
+## Build / Install Microservices
 
 1. **Install iRODS and dependencies (In my case, CentOS 7)**
 ```
@@ -30,23 +32,23 @@ $ cmake .. && make
 $ make install
 ```
 
-5. **Configure iRODS `core.re`**
+5. **You're all set!**
+
+## Usage of `msiextract_image_metadata`
+
+1. **Edit iRODS `core.re`**
 ```
 $ sudo vi /etc/irods/core.re
 ```
 
-Add the following contents to `core.re` file:
+2. Add the following contents to `core.re` file:
 ```
 acPostProcForPut {
 	msiextract_image_metadata($objPath);
 }
 ```
 
-6. **You're all set!**
-
-## Usage
-
-From root `irods-ugm-2017/` repo directory:
+3. Run `iput` on image file from root `irods-ugm-2017/` repo directory:
 ```
 $ iput gopher.jpg
 ```
@@ -65,8 +67,24 @@ value: zoogdier,gewerveld,eekhoorn,dieren in het wild,fauna,bakkebaarden,prairie
 units: 
 ```
 
+## Usage of `msibasic_example`
+
+1. Run `irule -F go-microservice/msibasic_example/test.r` from root `irods-ugm-2017/` repo directory.
+
+**test.r:**
+```
+TestBasicExample {
+    msibasic_example("keytest,valuetest", *outKVP);
+    msiPrintKeyValPair("stderr", *outKVP)
+}
+
+INPUT null
+OUTPUT ruleExecOut
+```
+
 ## Developer Resources
 
 * [msiextract_image_metadata Microservice Source Code](/go-microservice/msiextract_image_metadata/msiextract_image_metadata.go)
 * [GoRODS/msi Package Documentation](https://godoc.org/github.com/jjacquay712/GoRODS/msi)
+
 
