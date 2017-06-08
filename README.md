@@ -2,7 +2,11 @@
 
 This repository contains resources for John Jacquay's iRODS UGM 2017 talk/demo. The following instructions are for building and testing the Golang microservice demo.
 
-Two microservices are included: `msiextract_image_metadata` and `msibasic_example`. 
+Two microservices are included: `msiextract_image_metadata` and `msibasic_example`.
+
+`msiextract_image_metadata` extracts metadata information from image files using [Google's Cloud Vision API](https://cloud.google.com/vision/) and a [Golang EXIF package](https://github.com/rwcarlsen/goexif).
+
+`msibasic_example` accepts a two column CSV string as the first argument, and returns an output `KeyValPair_MS_T` data structure in the second argument.
 
 ## Build / Install Microservices
 
@@ -36,7 +40,7 @@ $ make install
 
 ## Usage of `msiextract_image_metadata`
 
-1. **Edit iRODS `core.re`**
+1. Edit iRODS `core.re`
 ```
 $ sudo vi /etc/irods/core.re
 ```
@@ -70,8 +74,6 @@ units:
 ## Usage of `msibasic_example`
 
 1. Run `irule -F go-microservice/msibasic_example/test.r` from root `irods-ugm-2017/` repo directory.
-
-**test.r:**
 ```
 TestBasicExample {
     msibasic_example("keytest,valuetest", *outKVP);
