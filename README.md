@@ -13,13 +13,13 @@ $ yum install irods-externals* irods-runtime irods-devel
 
 2. **Fetch project files**
 ```
-git clone https://github.com/jjacquay712/irods-ugm-2017.git
+$ git clone https://github.com/jjacquay712/irods-ugm-2017.git
 ```
 
 3. **Setup $PATH**
 ```
-export PATH=$PATH:/opt/irods-externals/cmake3.5.2-0/bin
-export PATH=$PATH:/opt/irods-externals/clang3.8-0/bin
+$ export PATH=$PATH:/opt/irods-externals/cmake3.5.2-0/bin
+$ export PATH=$PATH:/opt/irods-externals/clang3.8-0/bin
 ```
 
 4. **Build and install**
