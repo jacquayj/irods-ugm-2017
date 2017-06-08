@@ -91,6 +91,22 @@ Output:
 keytest = valuetest
 ```
 
+### Testing `msibasic_example`
+
+From `irods-ugm-2017/` root repo directory:
+```
+$ go-microservice/run_tests.sh 
+```
+
+Output:
+```
+=== RUN   TestBasicExample
+--- PASS: TestBasicExample (0.00s)
+	msibasic_example_test.go:19: Success!
+PASS
+ok  	command-line-arguments	0.023s
+```
+
 ## Developer Resources
 
 * [msibasic_example Microservice Source Code](/go-microservice/msibasic_example/msibasic_example.go)
