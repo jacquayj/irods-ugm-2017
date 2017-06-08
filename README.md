@@ -74,6 +74,8 @@ units:
 ## Usage of `msibasic_example`
 
 1. Run `irule -F go-microservice/msibasic_example/test.r` from root `irods-ugm-2017/` repo directory.
+
+test.r:
 ```
 TestBasicExample {
     msibasic_example("keytest,valuetest", *outKVP);
@@ -82,6 +84,11 @@ TestBasicExample {
 
 INPUT null
 OUTPUT ruleExecOut
+```
+
+Output:
+```
+keytest = valuetest
 ```
 
 ## Developer Resources
