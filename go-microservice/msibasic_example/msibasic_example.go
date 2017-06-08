@@ -33,6 +33,7 @@ func BasicExample(inputParam *C.msParam_t, outputParam *C.msParam_t, rei *C.rule
 	return 0
 }
 
+// Parse CSV and return a map of key value pairs
 func GetKVPMap(csvStr string) map[string]string {
 	kvpMap := make(map[string]string)
 
@@ -50,6 +51,11 @@ func GetKVPMap(csvStr string) map[string]string {
 	}
 
 	return kvpMap
+}
+
+// Used in testing, since C package can't be imported to test files
+func UnsafePtrToC(ptr unsafe.Pointer) *C.msParam_t {
+	return (*C.msParam_t)(ptr)
 }
 
 func main() {

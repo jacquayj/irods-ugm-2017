@@ -1,26 +1,27 @@
 package main
 
 import (
+	"github.com/jjacquay712/GoRODS/msi"
 	"strings"
 	"testing"
 )
 
 func TestBasicExample(t *testing.T) {
 
-	// inputParam := getMsParam()
-	// outputParam := getMsParam()
+	inputParam := msi.NewParam(msi.STR_MS_T).SetString("keytest,valtest")
+	outputParam := msi.NewParam(msi.KeyValPair_MS_T)
 
-	// setMsParamStr(inputParam, "test1234")
+	if status := BasicExample(UnsafePtrToC(inputParam.Ptr()), UnsafePtrToC(outputParam.Ptr()), nil); status == 0 {
 
-	// if status := ExtractImageMetadata(inputParam, outputParam, nil); status == 0 {
-	// 	output := getMsParamStr(outputParam) // NEED TO FIX
+		kvpStr := outputParam.String()
 
-	// 	if strings.Contains(output, "test5678") {
-	// 		t.Fatalf("Not expecting string")
-	// 	} else {
-	// 		t.Log(output)
-	// 	}
-	// } else {
-	// 	t.Fatalf("Status = %v not 0", status)
-	// }
+		if strings.Contains(kvpStr, "keytest = valtest") {
+			t.Log("Success!")
+		} else {
+			t.Fatalf("'%v' != '%v'", kvpStr, "keytest = valtest")
+		}
+
+	} else {
+		t.Fatalf("Status = %v not 0", status)
+	}
 }
