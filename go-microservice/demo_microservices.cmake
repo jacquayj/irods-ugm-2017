@@ -2,6 +2,7 @@
 set(
   GOMICROSERVICES
   msiextract_image_metadata
+  msibasic_example
   )
 
 set(

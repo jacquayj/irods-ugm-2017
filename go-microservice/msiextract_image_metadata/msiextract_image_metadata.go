@@ -29,11 +29,11 @@ const API_AUTH_FILE = "/etc/irods/iRODS-UGM-Demo.json"
 //export ExtractImageMetadata
 func ExtractImageMetadata(imagePath *C.msParam_t, rei *C.ruleExecInfo_t) int {
 
-	// Convert input to Golang strings
-	imageFilePath := msi.ToParam(unsafe.Pointer(imagePath)).String()
-
 	// Setup GoRODS/msi
 	msi.Configure(unsafe.Pointer(rei))
+
+	// Convert input to Golang strings
+	imageFilePath := msi.ToParam(unsafe.Pointer(imagePath)).String()
 
 	// Filter out non-images
 	validExtensions := []string{".jpg", ".png", ".gif"}
@@ -121,7 +121,6 @@ func (labels ImgLabels) FetchTranslations(apiAuthFile string) {
 }
 
 func (labels ImgLabels) ToKVP() *msi.Param {
-	metaKVPs := msi.NewParam(msi.KeyValPair_MS_T)
 
 	metaMap := make(map[string]string)
 	metaMap["tags_english"] = ""
@@ -135,7 +134,7 @@ func (labels ImgLabels) ToKVP() *msi.Param {
 	metaMap["tags_english"] = strings.TrimRight(metaMap["tags_english"], ",")
 	metaMap["tags_dutch"] = strings.TrimRight(metaMap["tags_dutch"], ",")
 
-	return metaKVPs.SetKVP(metaMap)
+	return msi.NewParam(msi.KeyValPair_MS_T).SetKVP(metaMap)
 }
 
 func (labels ImgLabels) SetEnglish(enLabels []string) {
