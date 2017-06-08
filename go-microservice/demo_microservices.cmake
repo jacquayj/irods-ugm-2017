@@ -39,6 +39,14 @@ execute_process(COMMAND go get golang.org/x/text/language
 execute_process(COMMAND go get cloud.google.com/go/translate
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+execute_process(COMMAND go get github.com/rwcarlsen/goexif/exif
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+execute_process(COMMAND go get github.com/rwcarlsen/goexif/mknote
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+execute_process(COMMAND go get github.com/rwcarlsen/goexif/tiff
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 
 foreach(GOMICROSERVICE ${GOMICROSERVICES})

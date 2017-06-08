@@ -4,6 +4,9 @@ import (
 	"cloud.google.com/go/translate"
 	vision "cloud.google.com/go/vision/apiv1"
 	"github.com/jjacquay712/GoRODS/msi"
+	"github.com/rwcarlsen/goexif/exif"
+	"github.com/rwcarlsen/goexif/mknote"
+	"github.com/rwcarlsen/goexif/tiff"
 	"golang.org/x/net/context"
 	"golang.org/x/text/language"
 	"google.golang.org/api/option"
@@ -42,15 +45,60 @@ func ExtractImageMetadata(imagePath *C.msParam_t, rei *C.ruleExecInfo_t) int {
 	log.Printf("msiextract_image_metadata: Extracting metadata for %v", imageFilePath)
 
 	// Extract image metadata via machine learning API
-	kvp := GetImageLabels(imageFilePath, API_AUTH_FILE).ToKVP()
+	labelsKVP := GetImageLabels(imageFilePath, API_AUTH_FILE).ToKVP()
+
+	// Extract exif metadata
+	exifKVP := ExtractExifData(imageFilePath)
 
 	// Associate metadata to data object
-	if err := msi.Call("msiAssociateKeyValuePairsToObj", kvp, imageFilePath, "-d"); err != nil {
+	if err := msi.Call("msiAssociateKeyValuePairsToObj", labelsKVP, imageFilePath, "-d"); err != nil {
+		log.Print(err)
+		return -1
+	}
+
+	if err := msi.Call("msiAssociateKeyValuePairsToObj", exifKVP, imageFilePath, "-d"); err != nil {
 		log.Print(err)
 		return -1
 	}
 
 	return 0
+}
+
+type ExifWalker struct {
+	kvpMap map[string]string
+}
+
+func NewExifWalker() *ExifWalker {
+	w := new(ExifWalker)
+	w.kvpMap = make(map[string]string)
+	return w
+}
+
+func (w *ExifWalker) Walk(name exif.FieldName, tag *tiff.Tag) error {
+	w.kvpMap["exif_"+string(name)] = tag.String()
+	return nil
+}
+
+func ExtractExifData(rodsPath string) *msi.Param {
+	file, err := msi.NewObjReader(rodsPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	exif.RegisterParsers(mknote.All...)
+
+	exifData, err := exif.Decode(file)
+	if err != nil {
+		log.Print(err)
+	}
+
+	walker := NewExifWalker()
+	if wErr := exifData.Walk(walker); wErr != nil {
+		log.Print(wErr)
+	}
+
+	return msi.NewParam(msi.KeyValPair_MS_T).SetKVP(walker.kvpMap)
 }
 
 type ImgLabel struct {
