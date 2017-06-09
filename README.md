@@ -71,8 +71,18 @@ $ iput gopher.jpg
 
 ![Gopher Picture](/gopher.jpg?raw=true "Gophers are cool")
 
+List Metadata:
 ```
 $ imeta ls -d gopher.jpg
+```
+
+Or if you used the Vagrant install or enabled gz compression:
+```
+$ imeta ls -d gopher.jpg.gz
+```
+
+Output:
+```
 AVUs defined for dataObj gopher.jpg:
 attribute: tags_english
 value: mammal,vertebrate,squirrel,wildlife,fauna,whiskers,prairie dog,marmot,rodent,fox squirrel
