@@ -13,7 +13,8 @@ Two microservices are included: `msiextract_image_metadata` and `msibasic_exampl
 ```
 $ git clone https://github.com/jjacquay712/irods-ugm-2017.git
 $ cd irods-ugm-2017
-$ vagrant up
+$ vagrant up && vagrant ssh
+$ sudo service irods start
 ```
 
 ## Manual Build / Install Microservices (hard mode)
