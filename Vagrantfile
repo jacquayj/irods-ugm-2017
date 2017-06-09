@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "jjacquay712/irods-ugm-2017"
 
-  config.ssh.private_key_path = "./private_key"
+  config.ssh.private_key_path = "./vagrant_private_key"
 
   config.vm.provider "virtualbox" do |vb|
     # Display the VirtualBox GUI when booting the machine
