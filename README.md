@@ -8,7 +8,15 @@ Two microservices are included: `msiextract_image_metadata` and `msibasic_exampl
 
 `msibasic_example` accepts a two column CSV string as the first argument, and returns an output `KeyValPair_MS_T` data structure in the second argument.
 
-## Build / Install Microservices
+## Vagrant + Virtualbox Install (easy mode)
+
+```
+$ git clone https://github.com/jjacquay712/irods-ugm-2017.git
+$ cd irods-ugm-2017
+$ vagrant up
+```
+
+## Manual Build / Install Microservices (hard mode)
 
 1. **Install iRODS 4.2.1 and dependencies (In my case, CentOS 7)**
 ```
@@ -47,7 +55,7 @@ $ sudo make install
 $ sudo vi /etc/irods/core.re
 ```
 
-2. Add the following contents to `core.re` file:
+2. Add the following contents to `core.re` file (if you chose manual install, not required for Vagrant):
 ```
 acPostProcForPut {
 	# Second parameter enables/disables gzip compression
