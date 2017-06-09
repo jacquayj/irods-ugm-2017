@@ -35,7 +35,7 @@ $ export PATH=$PATH:/opt/irods-externals/clang3.8-0/bin
 $ cd irods-ugm-2017/go-microservice
 $ mkdir build && cd build
 $ cmake .. && make
-$ make install
+$ sudo make install
 ```
 
 6. **You're all set!**
