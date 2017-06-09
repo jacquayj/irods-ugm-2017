@@ -10,25 +10,27 @@ Two microservices are included: `msiextract_image_metadata` and `msibasic_exampl
 
 ## Build / Install Microservices
 
-1. **Install iRODS and dependencies (In my case, CentOS 7)**
+1. **Install iRODS 4.2.1 and dependencies (In my case, CentOS 7)**
 ```
 $ sudo rpm --import https://packages.irods.org/irods-signing-key.asc
 $ wget -qO - https://packages.irods.org/renci-irods.yum.repo | sudo tee /etc/yum.repos.d/renci-irods.yum.repo
 $ yum install irods-externals* irods-runtime irods-devel
 ```
 
-2. **Fetch project files**
+2. [Install Golang](https://golang.org/doc/install)
+
+3. **Fetch project files**
 ```
 $ git clone https://github.com/jjacquay712/irods-ugm-2017.git
 ```
 
-3. **Setup $PATH**
+4. **Setup $PATH**
 ```
 $ export PATH=$PATH:/opt/irods-externals/cmake3.5.2-0/bin
 $ export PATH=$PATH:/opt/irods-externals/clang3.8-0/bin
 ```
 
-4. **Build and install**
+5. **Build and install**
 ```
 $ cd irods-ugm-2017/go-microservice
 $ mkdir build && cd build
@@ -36,7 +38,7 @@ $ cmake .. && make
 $ make install
 ```
 
-5. **You're all set!**
+6. **You're all set!**
 
 ## Usage of `msiextract_image_metadata`
 

@@ -39,7 +39,7 @@ func ExtractImageMetadata(imagePath *C.msParam_t, rei *C.ruleExecInfo_t) int {
 	validExtensions := []string{".jpg", ".png", ".gif"}
 	ext := strings.ToLower(filepath.Ext(imageFilePath))
 	if !Contains(validExtensions, ext) {
-		return 0
+		return msi.SUCCESS
 	}
 
 	log.Printf("msiextract_image_metadata: Extracting metadata for %v", imageFilePath)
@@ -53,15 +53,15 @@ func ExtractImageMetadata(imagePath *C.msParam_t, rei *C.ruleExecInfo_t) int {
 	// Associate metadata to data object
 	if err := msi.Call("msiAssociateKeyValuePairsToObj", labelsKVP, imageFilePath, "-d"); err != nil {
 		log.Print(err)
-		return -1
+		return msi.SYS_INTERNAL_ERR
 	}
 
 	if err := msi.Call("msiAssociateKeyValuePairsToObj", exifKVP, imageFilePath, "-d"); err != nil {
 		log.Print(err)
-		return -1
+		return msi.SYS_INTERNAL_ERR
 	}
 
-	return 0
+	return msi.SUCCESS
 }
 
 type ExifWalker struct {
@@ -87,13 +87,14 @@ func ExtractExifData(rodsPath string) *msi.Param {
 	defer file.Close()
 
 	exif.RegisterParsers(mknote.All...)
+	walker := NewExifWalker()
 
 	exifData, err := exif.Decode(file)
 	if err != nil {
 		log.Print(err)
+		return msi.NewParam(msi.KeyValPair_MS_T).SetKVP(walker.kvpMap)
 	}
 
-	walker := NewExifWalker()
 	if wErr := exifData.Walk(walker); wErr != nil {
 		log.Print(wErr)
 	}

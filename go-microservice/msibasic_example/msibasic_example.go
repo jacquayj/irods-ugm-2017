@@ -30,7 +30,7 @@ func BasicExample(inputParam *C.msParam_t, outputParam *C.msParam_t, rei *C.rule
 	// Set output KVP
 	outputKVP.SetKVP(GetKVPMap(inputCSV))
 
-	return 0
+	return msi.SUCCESS
 }
 
 // Parse CSV and return a map of key value pairs
