@@ -8,7 +8,7 @@ Two microservices are included: `msiextract_image_metadata` and `msibasic_exampl
 
 `msibasic_example` accepts a two column CSV string as the first argument, and returns an output `KeyValPair_MS_T` data structure in the second argument.
 
-## Vagrant + Virtualbox Install (easy mode)
+## Vagrant + VirtualBox Install (easy mode)
 
 ```
 $ git clone https://github.com/jjacquay712/irods-ugm-2017.git
