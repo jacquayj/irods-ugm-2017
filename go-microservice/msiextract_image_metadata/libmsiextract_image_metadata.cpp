@@ -13,7 +13,7 @@ extern "C"
 irods::ms_table_entry* plugin_factory() {
 
     // Specify number of arguments (excluding last *ruleExecInfo_t)
-    int numArgs = 1;
+    int numArgs = 2;
 
     irods::ms_table_entry* msvc = new irods::ms_table_entry(numArgs);
     msvc->add_operation(
@@ -21,6 +21,7 @@ irods::ms_table_entry* plugin_factory() {
         // Make sure this matches the .cpp filename (excluding the lib prefix) in the current directory.
         "msiextract_image_metadata",
         std::function<int(
+            msParam_t*,
             msParam_t*,
             ruleExecInfo_t*)>(ExtractImageMetadata));
     

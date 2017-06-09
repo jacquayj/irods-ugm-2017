@@ -50,7 +50,8 @@ $ sudo vi /etc/irods/core.re
 2. Add the following contents to `core.re` file:
 ```
 acPostProcForPut {
-	msiextract_image_metadata($objPath);
+	# Second parameter enables/disables gzip compression
+	msiextract_image_metadata($objPath, 0);
 }
 ```
 

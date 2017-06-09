@@ -3,6 +3,7 @@ package main
 import (
 	"cloud.google.com/go/translate"
 	vision "cloud.google.com/go/vision/apiv1"
+	"compress/gzip"
 	"github.com/jjacquay712/GoRODS/msi"
 	"github.com/rwcarlsen/goexif/exif"
 	"github.com/rwcarlsen/goexif/mknote"
@@ -10,6 +11,7 @@ import (
 	"golang.org/x/net/context"
 	"golang.org/x/text/language"
 	"google.golang.org/api/option"
+	"io"
 	"log"
 	"path/filepath"
 	"strings"
@@ -27,13 +29,14 @@ import "C"
 const API_AUTH_FILE = "/etc/irods/iRODS-UGM-Demo.json"
 
 //export ExtractImageMetadata
-func ExtractImageMetadata(imagePath *C.msParam_t, rei *C.ruleExecInfo_t) int {
+func ExtractImageMetadata(imagePath *C.msParam_t, enableGzipInt *C.msParam_t, rei *C.ruleExecInfo_t) int {
 
 	// Setup GoRODS/msi
 	msi.Configure(unsafe.Pointer(rei))
 
-	// Convert input to Golang strings
+	// Convert input to Golang types
 	imageFilePath := msi.ToParam(unsafe.Pointer(imagePath)).String()
+	enableGzip := msi.ToParam(unsafe.Pointer(enableGzipInt)).Int() > 0
 
 	// Filter out non-images
 	validExtensions := []string{".jpg", ".png", ".gif"}
@@ -49,6 +52,32 @@ func ExtractImageMetadata(imagePath *C.msParam_t, rei *C.ruleExecInfo_t) int {
 
 	// Extract exif metadata
 	exifKVP := ExtractExifData(imageFilePath)
+
+	if enableGzip {
+		gzipDataObjPath := imageFilePath + ".gz"
+		gzipDesc := msi.NewParam(msi.INT_MS_T)
+
+		if err := msi.Call("msiDataObjCreate", gzipDataObjPath, "", gzipDesc); err != nil {
+			log.Print(err)
+			return msi.SYS_INTERNAL_ERR
+		}
+
+		gzipDataObj := msi.NewObjReaderFromDesc(gzipDesc)
+		defer gzipDataObj.Close()
+
+		gzWriter := gzip.NewWriter(gzipDataObj)
+		defer gzWriter.Close()
+
+		origDataObj, err := msi.NewObjReader(imageFilePath)
+		if err != nil {
+			log.Fatalf("Failed to read file: %v", err)
+		}
+		defer origDataObj.Close()
+
+		io.Copy(gzWriter, origDataObj)
+
+		imageFilePath = gzipDataObjPath
+	}
 
 	// Associate metadata to data object
 	if err := msi.Call("msiAssociateKeyValuePairsToObj", labelsKVP, imageFilePath, "-d"); err != nil {
