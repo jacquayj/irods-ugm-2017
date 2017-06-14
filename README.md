@@ -15,7 +15,10 @@ $ git clone https://github.com/jjacquay712/irods-ugm-2017.git
 $ cd irods-ugm-2017
 $ vagrant up && vagrant ssh
 $ sudo service irods start
+$ sudo sh -c 'curl https://gist.githubusercontent.com/jjacquay712/f8e07a73e7e59ae03125f5d5a300821a/raw/c2506a5e267e6ca8f32dda1c960c316dcd310954/gistfile1.txt > /etc/irods/iRODS-UGM-Demo.json'
 ```
+
+**Note:** You can also use your own Google Cloud Platform Service Account key. Simply save to `/etc/irods/iRODS-UGM-Demo.json`.
 
 ## Manual Build / Install Microservices (hard mode)
 
@@ -47,7 +50,11 @@ $ cmake .. && make
 $ sudo make install
 ```
 
-6. **You're all set!**
+6. **Create Google Cloud Platform Service Account**
+
+Save to private key to `/etc/irods/iRODS-UGM-Demo.json`
+
+7. **You're all set!**
 
 ## Usage of `msiextract_image_metadata`
 

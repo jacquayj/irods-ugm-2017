@@ -96,10 +96,3 @@ foreach(GOMICROSERVICE ${GOMICROSERVICES})
 
 endforeach()
 
-
-install(
-  FILES
-  ${CMAKE_SOURCE_DIR}/iRODS-UGM-Demo.json
-  DESTINATION /etc/irods
-  )
-
